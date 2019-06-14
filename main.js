@@ -243,7 +243,7 @@ console.log( 'The unique customers are:', uniqueCustomers );
   - There may be more than 1 'sale' that includes 5 or more items.
   - Individual transactions do not have either `name` or `numItems` properties, we'll have to add them to the output.
 */
-const bigSpenders3 = transactions.filter(transaction => transaction.items.length >= 5 && transaction.customer).map(transaction => {
+const bigSpenders = transactions.filter(transaction => transaction.items.length >= 5 && transaction.customer).map(transaction => {
   const newObj = {};
   newObj['Customer Name'] = transaction.customer;
   newObj.numItems = transaction.items.length;
@@ -262,7 +262,12 @@ console.log( 'The "big spenders" are:', bigSpenders );
   HINT(S):
   - Transactions don't have 'prices', but their 'items' do!
 */
-const sumFirstSale;
+
+const firstSaleItems = transactions.filter(transaction => transaction.type == 'sale')[0].items;
+
+const reducePrice = (accumulator, currentVal) => accumulator + currentVal.price
+
+const sumFirstSale = firstSaleItems.reduce(reducePrice, 0);
 
 console.log( 'The sum of the first sale items is:', sumFirstSale );
 
@@ -278,7 +283,13 @@ console.log( 'The sum of the first sale items is:', sumFirstSale );
   - Make sure to include 'price' information from *all* purchases.
 */
 
-const sumPurchases;
+const purchaseItems = transactions
+                .filter(transaction => transaction.type == 'purchase')
+                .map(itemList => itemList.items)
+
+const sumPurchases = purchaseItems
+                      .flat()
+                      .reduce(reducePrice, 0)
 
 console.log( 'The sum of all purchases is:', sumPurchases );
 
@@ -295,32 +306,45 @@ console.log( 'The sum of all purchases is:', sumPurchases );
 
   HINT(S):
   - Unlike 'QUESTION 08' and 'QUESTION 09', here we're interested in both 'sale' and 'purchase' transactions.
-*/
-const netProfit;
+// */
+
+const ItemList = transactions.map(itemList => itemList.items).flat()
+
+const netProfit = ItemList.reduce(reducePrice, 0)
 
 console.log( 'The net profit is:', netProfit );
 
 
-// --------------------------------------------------
-// QUESTION 11
-// --------------------------------------------------
-/*
-  Calculate the most items sold as part of single transaction.
+// // --------------------------------------------------
+// // QUESTION 11
+// // --------------------------------------------------
+// /*
+//   Calculate the most items sold as part of single transaction.
 
-  HINTS:
-  - The result of this calculation should be a number (not an array, object, or other data type).
-*/
-const mostItems;
+//   HINTS:
+//   - The result of this calculation should be a number (not an array, object, or other data type).
+// */
+
+
+
+const mostItems = transactions
+                  .filter(transaction => transaction.type == 'sale')
+                  .map(itemList => itemList.items.length)
+                  .sort((a, b) => b-a)[0]
 
 console.log( 'The most items sold in a single transaction is:', mostItems );
 
 
-// --------------------------------------------------
-// QUESTION 12
-// --------------------------------------------------
-/*
-  Calculate the sum of the 'purchase' with the fewest items.
-*/
-const sumOfSmallestPurchase;
+// // --------------------------------------------------
+// // QUESTION 12
+// // --------------------------------------------------
+// /*
+//   Calculate the sum of the 'purchase' with the fewest items.
+// */
+const sumOfSmallestPurchase = transactions
+                              .filter(transaction => transaction.type == 'purchase')
+                              .map(purchaseItems => purchaseItems.items)
+                              .sort()[0]
+                              .reduce(reducePrice, 0)
 
 console.log( 'The sum of the smallest purchase is:', sumOfSmallestPurchase );
