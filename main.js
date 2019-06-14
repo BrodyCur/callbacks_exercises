@@ -130,7 +130,7 @@ console.log( 'The total number of transactions is:', totalTransactions );
   HINT(S):
   - Not all transactions are 'sales'.
 */
-const numSales;
+const numSales = transactions.filter(transaction => transaction.type == 'sale').length;
 
 /*
   Hey, welcome to the first question!
@@ -160,7 +160,7 @@ console.log( 'The total number of sales is:', numSales );
 /*
   Calculate the total number of 'purchases'.
 */
-const numPurchases;
+const numPurchases = transactions.filter(transaction => transaction.type == 'purchase').length;
 
 console.log( 'The total number of purchases is:', numPurchases );
 
@@ -174,7 +174,7 @@ console.log( 'The total number of purchases is:', numPurchases );
   HINT(S):
   - Don't forget that 'purchases' can also be made in 'cash'!
 */
-const numCashSales;
+const numCashSales = transactions.filter(transaction => transaction.type == 'sale' && transaction.paymentMethod == 'cash').length;
 
 console.log( 'The total number of cash sales is:', numCashSales );
 
@@ -188,7 +188,7 @@ console.log( 'The total number of cash sales is:', numCashSales );
   HINT(S):
   - Make sure to exclude any 'sales' made by 'credit'!
 */
-const numCreditPurchases;
+const numCreditPurchases = transactions.filter(transaction => transaction.type == 'purchase' && transaction.paymentMethod == 'credit').length;
 
 console.log( 'The total number of credit purchases is:', numCreditPurchases );
 
@@ -205,7 +205,7 @@ console.log( 'The total number of credit purchases is:', numCreditPurchases );
   - The assembled array should be made up of strings, not full `transaction` objects.
   - This array is allowed to contain duplicate values.
 */
-const allVendors;
+const allVendors = transactions.filter(transaction => transaction.vendor).map(transaction => transaction.vendor);
 
 console.log( 'The vendors are:', allVendors );
 
@@ -222,7 +222,10 @@ console.log( 'The vendors are:', allVendors );
   - The assembled array should be made up of strings, not full `transaction` objects.
   - Make sure that the resulting array *does not* include any duplicates.
 */
-const uniqueCustomers;
+
+const customerArray = transactions.filter(transaction => transaction.customer).map(transaction => transaction.customer);
+
+const uniqueCustomers = new Set(customerArray);
 
 console.log( 'The unique customers are:', uniqueCustomers );
 
@@ -240,7 +243,12 @@ console.log( 'The unique customers are:', uniqueCustomers );
   - There may be more than 1 'sale' that includes 5 or more items.
   - Individual transactions do not have either `name` or `numItems` properties, we'll have to add them to the output.
 */
-const bigSpenders;
+const bigSpenders3 = transactions.filter(transaction => transaction.items.length >= 5 && transaction.customer).map(transaction => {
+  const newObj = {};
+  newObj['Customer Name'] = transaction.customer;
+  newObj.numItems = transaction.items.length;
+  return newObj
+})
 
 console.log( 'The "big spenders" are:', bigSpenders );
 
